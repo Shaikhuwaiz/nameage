@@ -5,17 +5,20 @@ function App() {
   const [age, setAge] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("https://backend1-production-3e01.up.railway.app/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, age }),
-      });
+      const res = await fetch(
+        "https://backend1-production-3e01.up.railway.app/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, age }),
+        }
+      );
 
       const data = await res.json();
 
