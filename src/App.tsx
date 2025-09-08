@@ -10,7 +10,7 @@ function App() {
 
     try {
       const res = await fetch(
-        "https://backend1-production-3e01.up.railway.app/users",
+        "https://simplebackend-1.onrender.com/",
         {
           method: "POST",
           headers: {
