@@ -1,69 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("❌ Not connected");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const checkBackend = async () => {
     try {
-      const res = await fetch(
-        "https://simplebackend-1.onrender.com/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, age }),
-        }
-      );
-
-      const data = await res.json();
-
+      const res = await fetch("https://simplebackend-production.up.railway.app/users");
       if (res.ok) {
-        setStatus(`✅ ${data.message}`);
-        setName("");
-        setAge("");
+        setStatus("✅ Successfully connected to backend");
       } else {
-        setStatus(`❌ ${data.message}`);
+        setStatus("❌ Backend responded with error");
       }
-    } catch (error) {
-      console.error("Submit error:", error);
-      setStatus("❌ Failed to connect to backend.");
+    } catch (err) {
+      setStatus("❌ Not connected to backend");
     }
   };
 
+  useEffect(() => {
+    checkBackend(); // initial check
+    const interval = setInterval(checkBackend, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-6">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg space-y-4 w-full max-w-sm text-center">
-        <h1 className="text-xl font-bold">User Form</h1>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            type="text"
-            placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 rounded bg-gray-700 text-white"
-            required
-          />
-          <input
-            type="number"
-            placeholder="Enter age"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            className="w-full px-3 py-2 rounded bg-gray-700 text-white"
-            required
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 transition px-4 py-2 rounded w-full"
-          >
-            Submit
-          </button>
-        </form>
-        <p className="text-sm mt-2">{status}</p>
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+        <h1 className="text-xl font-bold">Backend Status</h1>
+        <p
+          className={`mt-2 text-sm ${
+            status.startsWith("✅") ? "text-green-400" : "text-red-400"
+          }`}
+        >
+          Status: {status}
+        </p>
       </div>
     </div>
   );
