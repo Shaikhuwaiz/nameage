@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "npm exec vite",
     "build": "npm exec vite build",
-    "preview": "npm exec vite preview"
+    "preview": "npm exec vite preview",
+    "postinstall": "chmod +x ./node_modules/.bin/*"
   },
   "dependencies": {
     "react": "^19.1.1",
